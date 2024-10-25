@@ -1,0 +1,249 @@
+1. **Create Operation:**
+
+test> use Library
+switched to db Library
+Library> db.createCollection("Books")
+{ ok: 1 }
+Library> db.Books.insertMany([{title:"A Tale of Two Cities",author:"Charles Dickens",published_year:1859},{title:"Harry Potter",author:"J.K.Rowling",published_year:1997},{title:"Harry Potter and the Order of Phoenix",author:"J.K.Rowling",published_year:2003},{title:"Fifty Shades Darker",author:"E.L.James",published_year:2012}])
+{
+acknowledged: true,
+insertedIds: {
+'0': ObjectId('671b65e58cf8050eae86b01d'),
+'1': ObjectId('671b65e58cf8050eae86b01e'),
+'2': ObjectId('671b65e58cf8050eae86b01f'),
+'3': ObjectId('671b65e58cf8050eae86b020')
+}
+}
+
+
+2. **Read Operation:**
+
+
+Library> db.Books.find()
+[
+{
+_id: ObjectId('671b65e58cf8050eae86b01d'),
+title: 'A Tale of Two Cities',
+author: 'Charles Dickens',
+published_year: 1859
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01e'),
+title: 'Harry Potter',
+author: 'J.K.Rowling',
+published_year: 1997
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01f'),
+title: 'Harry Potter and the Order of Phoenix',
+author: 'J.K.Rowling',
+published_year: 2003
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b020'),
+title: 'Fifty Shades Darker',
+author: 'E.L.James',
+published_year: 2012
+}
+]
+Library> db.Books.find({author:"J.K.Rowling"})
+[
+{
+_id: ObjectId('671b65e58cf8050eae86b01e'),
+title: 'Harry Potter',
+author: 'J.K.Rowling',
+published_year: 1997
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01f'),
+title: 'Harry Potter and the Order of Phoenix',
+author: 'J.K.Rowling',
+published_year: 2003
+}
+]
+Library> db.Books.find().sort({ published_year: 1 }).limit(1)
+[
+{
+_id: ObjectId('671b65e58cf8050eae86b01d'),
+title: 'A Tale of Two Cities',
+author: 'Charles Dickens',
+published_year: 1859
+}
+]
+
+
+3. **Update Operation:**
+
+Library> db.Books.update({title:"A Tale of Two Cities"},{$set:{published_year:2024}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+Library> db.Books.find()
+[
+{
+_id: ObjectId('671b65e58cf8050eae86b01d'),
+title: 'A Tale of Two Cities',
+author: 'Charles Dickens',
+published_year: 2024
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01e'),
+title: 'Harry Potter',
+author: 'J.K.Rowling',
+published_year: 1997
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01f'),
+title: 'Harry Potter and the Order of Phoenix',
+author: 'J.K.Rowling',
+published_year: 2003
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b020'),
+title: 'Fifty Shades Darker',
+author: 'E.L.James',
+published_year: 2012
+}
+]
+Library> db.Books.update({},{$set:{genre:"Mystery"}},{multi:true})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 4,
+modifiedCount: 4,
+upsertedCount: 0
+}
+Library> db.Books.find()
+[
+{
+_id: ObjectId('671b65e58cf8050eae86b01d'),
+title: 'A Tale of Two Cities',
+author: 'Charles Dickens',
+published_year: 2024,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01e'),
+title: 'Harry Potter',
+author: 'J.K.Rowling',
+published_year: 1997,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01f'),
+title: 'Harry Potter and the Order of Phoenix',
+author: 'J.K.Rowling',
+published_year: 2003,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b020'),
+title: 'Fifty Shades Darker',
+author: 'E.L.James',
+published_year: 2012,
+genre: 'Mystery'
+}
+]
+
+
+4. **Delete Operation:**
+
+
+Library> db.Books.remove({title:"2012"})
+DeprecationWarning: Collection.remove() is deprecated. Use deleteOne, deleteMany, findOneAndDelete, or bulkWrite.
+{ acknowledged: true, deletedCount: 0 }
+Library> db.Books.find()
+[
+{
+_id: ObjectId('671b65e58cf8050eae86b01d'),
+title: 'A Tale of Two Cities',
+author: 'Charles Dickens',
+published_year: 2024,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01e'),
+title: 'Harry Potter',
+author: 'J.K.Rowling',
+published_year: 1997,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01f'),
+title: 'Harry Potter and the Order of Phoenix',
+author: 'J.K.Rowling',
+published_year: 2003,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b020'),
+title: 'Fifty Shades Darker',
+author: 'E.L.James',
+published_year: 2012,
+genre: 'Mystery'
+}
+]
+Library> db.Books.remove({published_year:{$lt:2000}})
+{ acknowledged: true, deletedCount: 1 }
+Library> db.Books.find()
+[
+{
+_id: ObjectId('671b65e58cf8050eae86b01d'),
+title: 'A Tale of Two Cities',
+author: 'Charles Dickens',
+published_year: 2024,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01f'),
+title: 'Harry Potter and the Order of Phoenix',
+author: 'J.K.Rowling',
+published_year: 2003,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b020'),
+title: 'Fifty Shades Darker',
+author: 'E.L.James',
+published_year: 2012,
+genre: 'Mystery'
+}
+]
+
+5. **Advanced Query:**
+
+Library> db.Books.find().sort({ publishedDate: -1 }).limit(3)
+[
+{
+_id: ObjectId('671b65e58cf8050eae86b01d'),
+title: 'A Tale of Two Cities',
+author: 'Charles Dickens',
+published_year: 2024,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b01f'),
+title: 'Harry Potter and the Order of Phoenix',
+author: 'J.K.Rowling',
+published_year: 2003,
+genre: 'Mystery'
+},
+{
+_id: ObjectId('671b65e58cf8050eae86b020'),
+title: 'Fifty Shades Darker',
+author: 'E.L.James',
+published_year: 2012,
+genre: 'Mystery'
+}
+]
+Library> db.Books.find({title:"Mongo DB"})
+
+Library>
+
+
+
